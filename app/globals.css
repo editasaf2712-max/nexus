@@ -16,3 +16,105 @@
 .post-media{display:block;width:100%;max-height:520px;object-fit:contain;background:#101426;border-radius:12px;margin:10px 0}
 
 .module-record-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:13px;border-top:1px solid var(--line);margin-top:13px}.module-record-actions .text-tool{padding:4px 0}.module-record-actions .text-tool:hover,.module-record-actions .text-tool.liked{color:var(--violet)}.module-action-message{flex-basis:100%;font-size:10px;color:var(--muted)}
+
+/* Nexus gradient visual refresh */
+:root{
+  --ink:#11182d;
+  --muted:#737b91;
+  --line:#e5eaf3;
+  --surface:#ffffff;
+  --canvas:#f5f7fc;
+  --violet:#7657f6;
+  --aqua:#25c7a8;
+  --blue:#4388f5;
+  --shadow:0 16px 42px rgba(33,49,94,.08);
+}
+body{
+  background:
+    radial-gradient(ellipse at 16% 0%,rgba(105,88,246,.075),transparent 32rem),
+    radial-gradient(ellipse at 88% 12%,rgba(37,199,168,.065),transparent 30rem),
+    var(--canvas);
+}
+.sidebar,.rightbar,.panel{
+  border-color:rgba(222,228,241,.9);
+  box-shadow:0 8px 28px rgba(35,48,90,.045);
+}
+.sidebar{backdrop-filter:blur(14px)}
+.brand-mark{background:linear-gradient(140deg,#4388f5 0%,#7657f6 52%,#25c7a8 100%)}
+.nav-link{transition:background .18s ease,color .18s ease,transform .18s ease}
+.nav-link:hover{background:#f0efff;color:#6244e8;transform:translateX(2px)}
+.nav-link.active{
+  color:#6045e8;
+  background:linear-gradient(100deg,rgba(118,87,246,.12),rgba(67,136,245,.07),rgba(37,199,168,.06));
+}
+.search:focus-within,.icon-button:focus-visible,.comment-entry input:focus-visible{
+  outline:3px solid rgba(67,136,245,.22);
+  border-color:#7e8df4;
+}
+.hero{
+  background:linear-gradient(112deg,#17234c 0%,#44317f 48%,#236f79 100%);
+  box-shadow:0 18px 40px rgba(56,50,130,.18);
+}
+.hero:before{
+  content:'';
+  position:absolute;
+  width:190px;height:190px;border-radius:50%;
+  right:140px;bottom:-145px;
+  background:radial-gradient(circle,rgba(37,199,168,.42),transparent 70%);
+  pointer-events:none;
+}
+.hero:after{border-color:#ffffff27}
+.eyebrow{color:#b9b2ff}
+.module-card{
+  border-color:#e7eaf4;
+  box-shadow:0 5px 16px rgba(35,48,90,.025);
+}
+.module-card:hover{
+  border-color:rgba(118,87,246,.27);
+  box-shadow:0 16px 32px rgba(51,59,122,.1);
+}
+.primary{
+  background:linear-gradient(110deg,#536ff2 0%,#7957f2 55%,#3aafcf 130%);
+  box-shadow:0 6px 16px rgba(104,83,235,.2);
+  transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;
+}
+.primary:hover{transform:translateY(-1px);filter:saturate(1.12);box-shadow:0 9px 20px rgba(104,83,235,.27)}
+.post-tag,.auth-note{
+  background:linear-gradient(100deg,rgba(118,87,246,.1),rgba(67,136,245,.07),rgba(37,199,168,.08));
+  color:#594bb3;
+}
+.post-art{
+  background:linear-gradient(115deg,#eeebff 0%,#e7f1ff 50%,#e1fbf5 100%);
+  color:#6551dc;
+}
+.post-actions button:hover,.post-actions button.liked,
+.module-record-actions .text-tool:hover,.module-record-actions .text-tool.liked{color:#6a4dec}
+.community-mark{background:linear-gradient(140deg,#efedff,#e4f8f4);color:#6251dc}
+.trend b{color:#344067}
+.data-card{box-shadow:0 9px 28px rgba(35,48,90,.055);transition:border-color .18s ease,box-shadow .18s ease}
+.data-card:hover{border-color:#dde1f2;box-shadow:0 13px 34px rgba(35,48,90,.075)}
+.mobile-nav{
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(16px);
+  box-shadow:0 -8px 28px rgba(35,48,90,.06);
+}
+.mobile-nav a.active{color:#684be9}
+.dark{
+  --canvas:#111526;
+  --surface:#1a2033;
+  --ink:#f2f3fb;
+  --line:#2b3450;
+  --muted:#a6aec4;
+}
+.dark body{
+  background:
+    radial-gradient(ellipse at 14% 0%,rgba(118,87,246,.13),transparent 32rem),
+    radial-gradient(ellipse at 88% 10%,rgba(37,199,168,.09),transparent 30rem),
+    var(--canvas);
+}
+.dark .sidebar,.dark .rightbar,.dark .panel,.dark .module-card,.dark .search,.dark .icon-button{background:rgba(26,32,51,.94);border-color:#2b3450}
+.dark .nav-link:hover,.dark .nav-link.active{background:linear-gradient(100deg,rgba(118,87,246,.2),rgba(67,136,245,.11),rgba(37,199,168,.1));color:#c6bcff}
+.dark .mobile-nav{background:rgba(26,32,51,.94)}
+.dark .data-card p,.dark .post-body,.dark .comment-item{color:#c4cadd}
+.dark .post-tag,.dark .auth-note{color:#cec6ff}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
