@@ -61,5 +61,11 @@ create policy "reporters create reports" on public.reports for insert with check
 insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types) values('nexus-media','nexus-media',false,52428800,array['image/jpeg','image/png','image/webp','image/gif','video/mp4','application/pdf']) on conflict(id) do nothing;
 create policy "authenticated upload own media" on storage.objects for insert to authenticated with check(bucket_id='nexus-media' and (storage.foldername(name))[1]=(select auth.uid())::text);
 create policy "owner reads own media" on storage.objects for select to authenticated using(bucket_id='nexus-media' and (storage.foldername(name))[1]=(select auth.uid())::text);
-create policy "public post media read" on storage.objects for select to authenticated using(bucket_id='nexus-media' and exists(select 1 from public.posts p where p.media_path=name and p.visibility='public'));
+create policy "public post media read" on storage.objects for select using(bucket_id='nexus-media' and exists(select 1 from public.posts p where p.media_path=name and p.visibility='public'));
 create policy "owner deletes own media" on storage.objects for delete to authenticated using(bucket_id='nexus-media' and (storage.foldername(name))[1]=(select auth.uid())::text);
+
+
+-- Keep authorization metadata out of client-controlled profile updates.
+revoke update on table public.profiles from anon, authenticated;
+grant update (username, display_name, bio, avatar_url, website, updated_at)
+  on table public.profiles to authenticated;
