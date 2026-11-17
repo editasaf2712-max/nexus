@@ -36,7 +36,7 @@ export default function SectionActions({mode,initial}:{mode:string;initial?:any}
      result=await supabase.from('messages').insert({conversation_id:conversation.data.id,sender_id:user.id,body:body.trim()});
     }
    }else if(mode==='settings'||mode==='profile'){
-    result=await supabase.from('profiles').upsert({id:user.id,display_name:display.trim(),username:username.trim()||null,bio:bio.trim(),updated_at:new Date().toISOString()});
+    result=await supabase.from('profiles').update({display_name:display.trim(),username:username.trim()||null,bio:bio.trim(),updated_at:new Date().toISOString()}).eq('id',user.id);
    }
    if(result?.error){setMsg(result.error.message);return}
    setMsg(mode==='messages'?'Sohbet oluşturuldu.':mode==='communities'?'Topluluk oluşturuldu.':'Profil kaydedildi.');
