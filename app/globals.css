@@ -148,3 +148,21 @@ body{
 .dark .module-card:nth-child(4){background:linear-gradient(150deg,#1a2033,#292342)}
 .dark .section-heading{border-color:#303a56}
 .dark .topbar .search,.dark .topbar .icon-button{box-shadow:none}
+
+/* Bring the requested palette into the AI and content views too */
+.module-heading{
+  padding:14px 16px;
+  border:1px solid #e3e6f5;
+  border-radius:16px;
+  background:linear-gradient(105deg,#edf3ff 0%,#f1edff 52%,#e6f8f2 100%);
+  box-shadow:0 8px 24px rgba(74,83,165,.08);
+}
+.module-heading .module-icon{
+  background:linear-gradient(140deg,#4388f5 0%,#7657f6 55%,#25c7a8 100%)!important;
+  color:#fff!important;
+  box-shadow:0 8px 18px rgba(99,83,220,.22);
+}
+.module-heading h1{color:#253368}
+.data-card{border-top:2px solid transparent;border-image:linear-gradient(90deg,#4388f5,#7657f6 52%,#25c7a8) 1}
+.dark .module-heading{background:linear-gradient(105deg,#1b2b50 0%,#30264f 52%,#193e3c 100%);border-color:#354064}
+.dark .module-heading h1{color:#f1efff}
