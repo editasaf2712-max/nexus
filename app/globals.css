@@ -332,3 +332,25 @@ body{
 .dark .module-card,.dark .module-card:nth-child(n){background:linear-gradient(140deg,#2e2050,#1e2038 46%,#163c2b);border-color:#41335c}
 .dark .post,.dark .composer,.dark .data-card{background:linear-gradient(115deg,#1b2034 0%,#282044 54%,#163b2a 100%)}
 .dark .post-tag,.dark .auth-note,.dark .community-mark{background:linear-gradient(110deg,#39285d,#29314f 48%,#1c4b35);color:#eee6ff}
+
+/* Replace default blue focus boxes with the Nexus violet/green focus treatment */
+:where(button,a,input,textarea,select,[tabindex]):focus-visible{
+  outline:3px solid rgba(105,65,210,.36)!important;
+  outline-offset:2px;
+  border-color:#7753d6!important;
+  box-shadow:0 0 0 1px rgba(20,145,91,.32);
+}
+.search:focus-within{
+  outline:3px solid rgba(105,65,210,.26);
+  outline-offset:2px;
+  border-color:#7753d6;
+  box-shadow:0 0 0 1px rgba(20,145,91,.24);
+}
+:where(button,a,input,textarea,select,[tabindex]):focus:not(:focus-visible){
+  outline:none;
+}
+.dark :where(button,a,input,textarea,select,[tabindex]):focus-visible{
+  outline-color:rgba(167,139,250,.62)!important;
+  border-color:#a78bfa!important;
+  box-shadow:0 0 0 1px rgba(74,222,168,.4);
+}
