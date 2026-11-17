@@ -47,7 +47,7 @@ export default async function SectionView({section,authError,searchQuery}:{secti
     }
   }
   return <><section className="hero" style={{minHeight:140}}><div className="eyebrow">NEXUS COMMUNITY</div><h1>{c.icon} {c.title}</h1><p>{c.intro}</p></section>
-    {section==='login'&&user?<div className="panel data-card"><div className="auth-note">Nexus hesabın açık. Topluluk akışına dönebilir veya AI sayfasını kullanabilirsin.</div><Link href="/ai" style={{color:'#7657f6',fontSize:12}}>Nexus AI →</Link></div>:(!user||section==='login')&&<div className="panel data-card"><div className="auth-note">{authError||(supabase?'E-posta ve parolanla giriş yap veya hesap oluştur.':'Giriş için Supabase ortam değişkenlerini yapılandır.')}</div><AuthPanel/></div>}
+    {section==='login'&&user?<div className="panel data-card"><div className="auth-note">Nexus hesabın açık. Topluluk akışına dönebilir veya AI sayfasını kullanabilirsin.</div><Link href="/ai" style={{color:'#7657f6',fontSize:12}}>Nexus AI →</Link></div>:(!user||section==='login')&&<div className="panel data-card"><div className="auth-note">{authError||(supabase?'Kullanıcı adın ve şifrenle giriş yap veya yeni bir hesap oluştur.':'Giriş için Supabase ortam değişkenlerini yapılandır.')}</div><AuthPanel/></div>}
     {denied&&<div className="auth-note" style={{marginTop:14}}>{denied}</div>}
     {section==='messages'&&user&&<SectionActions mode="messages"/>}
     {section==='communities'&&<>{user&&<SectionActions mode="communities"/>}<CommunityBrowser/></>}

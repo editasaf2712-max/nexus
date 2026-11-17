@@ -1,42 +1,37 @@
 # Nexus
 
-Nexus is a Turkish-first community product built with Next.js App Router, TypeScript, Tailwind, Supabase Auth/Postgres/Storage, and Vercel. It brings the social feed and four spaces (DebateHub, SkillShare, IdeaMarket, DevSpace) into one responsive interface.
+Nexus is a Turkish-first community platform built with Next.js, TypeScript, Supabase Auth/Postgres/Storage, and Render. The repository is connected to Render's `main` branch; pushing a commit to `main` starts a deployment.
 
-## Run locally
+## Edit on Ubuntu
 
-1. Install Node.js 20+ and run `npm install`.
-2. Copy `.env.example` to `.env.local`. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from your Supabase project. Never place the service role key in browser code; the app does not need it for ordinary requests.
-3. Run `supabase/schema.sql` in Supabase SQL Editor (or use the Supabase CLI migration workflow).
-4. In Supabase Auth, enable email/password. For Google, configure the Google OAuth client and callback URL `https://<project-ref>.supabase.co/auth/v1/callback`; add local and production site URLs to Supabase's redirect allow list, including `/auth/callback`.
-5. Run `npm run dev` and open http://localhost:3000.
+The working copy is `~/Documents/Codex/nexus`.
 
-Nexus AI is opt-in. For NVIDIA NIM, set `NVIDIA_API_KEY` and optionally `NVIDIA_MODEL` (defaults to `openai/gpt-oss-20b`) only in the server environment. The API uses NVIDIA's OpenAI-compatible chat completions endpoint. `OPENAI_API_KEY` remains supported as a fallback. The API route requires a signed-in user and never exposes provider keys through `NEXT_PUBLIC_` variables.
+1. Install Node.js 22 or newer.
+2. Open a terminal in this folder and run `npm install`.
+3. Copy `.env.example` to `.env.local` and fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from the Supabase project. Keep all secret keys out of browser variables. `SUPABASE_SERVICE_ROLE_KEY` is only needed by the admin API and must remain server-side.
+4. Start the local site with `npm run dev`, then open http://localhost:3000.
+5. Before sharing a change, run `npm run lint` and `npm run build`. Commit and push to `main` to publish it through Render.
 
-## Features and integration status
+## Authentication
 
-Authentication, Google OAuth callback, profile editing, public feed reads, post creation, and module creation use Supabase when configured. DebateHub, SkillShare, IdeaMarket, and DevSpace have persistent tables and server-rendered public listings. Community and conversation records can be created with RLS. The UI calls out missing Supabase configuration rather than pretending writes succeeded. Starter examples are presentational previews displayed only when the database is not connected.
+The app asks for a unique username and password only. Supabase password Auth requires an email or phone internally, so Nexus derives a non-deliverable address from the normalized username; it does not ask users for an email address. Keep Supabase Email Auth enabled and turn **Confirm email** off. The Google sign-in option is not shown. Password recovery by email is not available, so users should keep their password safe.
 
-Supabase schema also provisions tables for comments, follows, likes, saved posts, notifications, community membership, course lessons/enrollment/reviews, votes, project stars, and reports. Their RLS policies are the access boundary. Private membership/admin predicates live in a non-exposed `private` schema and use tightly scoped `SECURITY DEFINER` helpers to avoid recursive membership RLS checks. Moderation operations should be performed through a server-side route using an authenticated user's app-metadata role; never trust user-editable `user_metadata` for admin privileges. Set a trusted `app_metadata.role` to `admin` through Supabase dashboard or a protected operator workflow. Service role secrets must stay server-side.
+New usernames are normalized to lowercase ASCII with hyphens and underscores, and are 3–24 characters. The database enforces case-insensitive uniqueness and prevents profile edits from changing a username independently of its Auth alias.
 
-## Uploads and data protection
+## Supabase setup
 
-The private `nexus-media` Storage bucket accepts images, MP4 video, and PDFs up to 50 MiB and scopes paths to the authenticated user's UUID. Upload UI can use the Supabase browser client and must preserve these restrictions; do not make private files public. The current interface does not yet provide media selection, full message recipient discovery/conversation membership flow, or moderation review/actions. Likes, comments/replies, votes, follows, ratings, notifications, and moderation automation still require UI and transaction workflows before claiming full feature parity. The database schema and policies are prepared for some of those flows, but this is not a claim that every requested module is production-complete.
+The existing project is already provisioned. For a fresh database, apply the SQL in `supabase/schema.sql`, then apply each file under `supabase/migrations/` in timestamp order. Keep those migrations in Git and use forward-only changes for production. Row-level security policies are the access boundary; do not expose a service-role key to browser code.
 
-Enable Supabase scheduled daily backups/PITR appropriate to the chosen plan and retention requirements. Supabase-managed backups cover Postgres, not Storage objects. Back up the `nexus-media` bucket separately on a scheduled basis to a separate account/region, with encryption and lifecycle retention; periodically perform a restore drill. To recover, restore the latest database backup/PITR point in a separate project, restore matching Storage objects, verify auth/profile and object references, then switch deployment environment variables after validation. Keep migrations in Git and apply forward fixes rather than editing production schema without a migration.
+## Features and limits
 
-## Deploy
+The platform includes a public feed, profiles, comments, likes, follows, saved posts, private conversations, communities, reporting, admin moderation, and four learning/building spaces (DebateHub, SkillShare, IdeaMarket, DevSpace). Some features depend on correct Supabase environment variables and RLS policies. Media uploads and some learning workflows remain limited; check the UI and database before describing any feature as complete.
 
-1. Push this repository to GitHub (create/choose the repository in your own account).
-2. Import the repository into Vercel and configure the environment variables above for Preview and Production.
-3. Add the production hostname to Supabase Auth redirect URLs. For a custom domain, add it in Vercel, configure the exact DNS records shown there at your DNS provider, wait for verification, then set `NEXT_PUBLIC_SITE_URL`. Vercel provisions HTTPS after DNS validation. Configure `www` as a redirect in Vercel domain settings if desired.
-4. Check build, sign-in, RLS, OAuth, upload, and recovery in the connected accounts before launch.
+Nexus AI is optional. Set `NVIDIA_API_KEY` (and optionally `NVIDIA_MODEL`) or `OPENAI_API_KEY` only in the server environment. Provider keys must never use a `NEXT_PUBLIC_` prefix. The AI endpoint requires a signed-in user and enforces a daily request limit.
 
-No Supabase/Vercel/GitHub account or custom domain was created or linked here. DNS records depend on the domain and hosting account. `sitemap.xml` and `robots.txt` are generated by Next.js; update `NEXT_PUBLIC_SITE_URL` to the real canonical domain.
+## Production
 
-## Security notes
+Render serves the production site at [nexus-social-mpch.onrender.com](https://nexus-social-mpch.onrender.com) and deploys commits pushed to `main`. Supabase Auth redirect URLs should include the production origin and `/auth/callback`; add localhost only for local development. Never commit `.env.local` or credentials.
 
-- Keep `.env.local` out of Git (`.gitignore` excludes `.env*`). Rotate credentials if they are ever committed.
-- The anon key is intended for browser use; RLS must remain enabled. Never ship `SUPABASE_SERVICE_ROLE_KEY`.
-- Private conversations use membership-scoped RLS. Profile visibility is public; do not put private personal data in public profile fields.
-- Configure provider-level rate limits/CAPTCHA in Supabase Auth and add edge/API rate limiting before high-traffic production use. The included AI endpoint enforces login and input length, but does not include a distributed rate limiter.
-- Content moderation reports have a protected table, but automated harmful-content classification and a complete admin action workflow need an external moderation provider/operator flow.
+## Data protection
+
+The private `nexus-media` bucket restricts uploads to each user's UUID path. Supabase backups cover Postgres but not Storage objects; back up the bucket separately if users depend on uploaded files. Review Supabase security advisories and configure Auth rate limits/CAPTCHA before opening the platform to broad public traffic.
