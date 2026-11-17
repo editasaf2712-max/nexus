@@ -1,0 +1,12 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { createClient } from '../lib/supabase/client';
+type Message={id:string;body:string;sender_id:string;created_at:string};
+export default function ConversationThread({id}:{id:string}){
+ const [messages,setMessages]=useState<Message[]>([]);const [body,setBody]=useState('');const [userId,setUserId]=useState('');const [error,setError]=useState('');const [busy,setBusy]=useState(false);
+ async function load(){const client=createClient();if(!client)return;const {data:{user}}=await client.auth.getUser();if(!user)return;setUserId(user.id);const {data,error}=await client.from('messages').select('id,body,sender_id,created_at').eq('conversation_id',id).order('created_at',{ascending:true}).limit(100);if(error)setError('Sohbet mesajları yüklenemedi.');else setMessages(data||[])}
+ useEffect(()=>{void load()},[id]);
+ async function send(){if(!body.trim()||busy)return;const client=createClient();if(!client)return;const {data:{user}}=await client.auth.getUser();if(!user){setError('Mesaj göndermek için giriş yap.');return}setBusy(true);setError('');try{const {data,error}=await client.from('messages').insert({conversation_id:id,sender_id:user.id,body:body.trim()}).select('id,body,sender_id,created_at').single();if(error)throw error;setMessages(x=>[...x,data]);setBody('')}catch{setError('Mesaj gönderilemedi. Sohbet üyesi olduğundan emin ol.')}finally{setBusy(false)}}
+ return <div style={{display:'grid',gap:8,marginTop:12}}><div style={{display:'grid',gap:6,maxHeight:240,overflowY:'auto'}}>{messages.map(m=><div key={m.id} style={{padding:8,borderRadius:8,background:m.sender_id===userId?'#f1eeff':'#f6f7fa',fontSize:11}}>{m.body}<small style={{display:'block',color:'#9095a3',marginTop:4}}>{new Date(m.created_at).toLocaleString('tr-TR')}</small></div>)}</div><div style={{display:'flex',gap:8}}><input aria-label="Mesaj yaz" value={body} onChange={e=>setBody(e.target.value)} onKeyDown={e=>{if(e.key==='Enter')void send()}} placeholder="Mesaj yaz..." style={field}/><button className="primary" disabled={busy||!body.trim()} onClick={send}>{busy?'Gönderiliyor…':'Gönder'}</button></div>{error&&<small role="status" style={{color:'#b42318'}}>{error}</small>}</div>
+}
+const field:React.CSSProperties={minWidth:0,flex:1,border:'1px solid #ececf2',borderRadius:9,padding:'10px 12px',fontSize:12,background:'transparent',color:'inherit'};
