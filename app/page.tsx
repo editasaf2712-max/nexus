@@ -12,7 +12,7 @@ const starterPosts=[
 ];
 export default async function Home(){
  const supabase=await createClient();let posts:any[]=[];let feedError='';
- if(supabase){const {data,error}=await supabase.from('posts').select('id,author_id,body,media_path,created_at,profiles(id,display_name,username,avatar_url),likes(count),comments(count)').eq('visibility','public').order('created_at',{ascending:false}).limit(10);posts=data||[];if(error)feedError='Akış yüklenemedi. Biraz sonra yeniden dene.'}
+ if(supabase){const {data,error}=await supabase.from('posts').select('id,author_id,body,media_path,created_at,profiles(id,display_name,username,avatar_url),likes:post_likes(count),comments(count)').eq('visibility','public').order('created_at',{ascending:false}).limit(10);posts=data||[];if(error)feedError='Akış yüklenemedi. Biraz sonra yeniden dene.'}
  return <>
   <section className="hero"><div className="eyebrow">FİKİRLERİN BULUŞMA NOKTASI</div><h1>Merhaba, düşünmeye hazır mısın?</h1><p>Öğren, paylaş, üret. Fikirlerin değer bulduğu topluluğa katıl ve birlikte daha iyisini inşa et.</p><Link href="/explore"><button>Topluluğu keşfet <ArrowRight size={13} style={{verticalAlign:'middle',marginLeft:5}}/></button></Link><Sparkles size={25} style={{position:'absolute',right:65,top:65,color:'#afa1ff'}}/></section>
   <div className="section-heading"><h2>Nexus Spaces</h2><span>Hepsini keşfet →</span></div>
