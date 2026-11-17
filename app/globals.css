@@ -166,3 +166,23 @@ body{
 .data-card{border-top:2px solid transparent;border-image:linear-gradient(90deg,#4388f5,#7657f6 52%,#25c7a8) 1}
 .dark .module-heading{background:linear-gradient(105deg,#1b2b50 0%,#30264f 52%,#193e3c 100%);border-color:#354064}
 .dark .module-heading h1{color:#f1efff}
+
+/* Greeting hero: blue, green and violet are visible in the headline */
+.hero h1{
+  width:fit-content;
+  max-width:100%;
+  color:transparent;
+  background:linear-gradient(95deg,#ffffff 0%,#b9d5ff 44%,#c8baff 68%,#a8ffdc 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  filter:drop-shadow(0 2px 12px rgba(130,155,255,.15));
+}
+.hero .eyebrow{color:#bfc5ff}
+.hero button{
+  background:linear-gradient(105deg,#4c8df2 0%,#7657f6 55%,#20b995 125%);
+  color:#fff;
+  box-shadow:0 7px 20px rgba(39,196,165,.22);
+}
+.hero button:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.hero>svg{color:#67e2c2!important;filter:drop-shadow(0 0 8px rgba(103,226,194,.65))}
+.dark .hero h1{background-image:linear-gradient(95deg,#fff 0%,#bad8ff 44%,#d0c0ff 68%,#adffe0 100%)}
