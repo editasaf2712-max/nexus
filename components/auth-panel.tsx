@@ -19,7 +19,7 @@ export default function AuthPanel(){
   try{
    const result=mode==='in'
     ?await supabase.auth.signInWithPassword({email:email.trim(),password})
-    :await supabase.auth.signUp({email:email.trim(),password,options:{data:{display_name:name.trim()}}});
+    :await supabase.auth.signUp({email:email.trim(),password,options:{emailRedirectTo:`${(process.env.NEXT_PUBLIC_SITE_URL||window.location.origin).replace(/\\/$/,'')}/auth/callback`,data:{display_name:name.trim()}}});
    if(result.error){setMsg(result.error.message);return}
    if(mode==='in'){
     setMsg('Giriş başarılı.');
