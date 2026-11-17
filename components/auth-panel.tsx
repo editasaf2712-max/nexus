@@ -44,7 +44,7 @@ export default function AuthPanel(){
    const origin=window.location.origin;
    const redirectOrigin=process.env.NODE_ENV==='production'&&configuredUrl?new URL(configuredUrl).origin:origin;
    const {data,error}=await supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:`${redirectOrigin}/auth/callback`,skipBrowserRedirect:true}});
-   if(error){setMsg(error.message);return}
+   if(error){setMsg(error.message.toLowerCase().includes('provider is not enabled')?'Google ile giriş henüz etkin değil. Şimdilik e-posta ile kayıt olabilir veya Supabase sağlayıcı ayarlarında Google’ı etkinleştirebilirsin.':error.message);return}
    if(!data.url){setMsg('Google giriş bağlantısı oluşturulamadı. Supabase Google sağlayıcı ayarlarını kontrol edin.');return}
    window.location.assign(data.url);
   }catch{setMsg('Google ile giriş başlatılamadı. Supabase Google Client ID/Secret ve Google Cloud geri dönüş adresini kontrol edin.')}finally{setBusy(false)}
